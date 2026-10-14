@@ -27,7 +27,7 @@ const _diacritics = <String, String>{
 bool isAlphaLetter(String character) {
   if (character.length != 1) return false;
   final intCode = character.codeUnitAt(0);
-  return intCode >= 0x41 && intCode <= 0x59;
+  return intCode >= 0x41 && intCode <= 0x5A;
 }
 
 bool isWhiteSpace(String character) {
