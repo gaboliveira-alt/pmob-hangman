@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../domain/game/game_round.dart';
 import '../../domain/game/game_rules.dart';
-import '../../domain/model/answer_category.dart';
-import '../../domain/model/difficulty.dart';
 import '../../game_scope.dart';
-import '../l10n/labels.dart';
+import '../labels/labels.dart';
 import '../state/game_controller.dart';
 import '../widgets/alphabet_keyboard.dart';
 import '../widgets/answer_board.dart';
@@ -20,26 +18,26 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
   Future<void> _startAnotherRound(GameController controller) async {
-    final StartRoundResult result = controller.startAnotherRound();
+    final result = controller.startAnotherRound();
     if (result == StartRoundResult.exhausted && mounted) {
       await showExhaustedDialog(context, controller);
     }
   }
 
   Future<void> _handleBack(GameController controller) async {
-    final GameRound? round = controller.currentRound;
+    final round = controller.currentRound;
     if (round == null || round.isFinished) {
       Navigator.of(context).maybePop();
       return;
     }
-    final bool abandon = await _confirmAbandon(context);
+    final abandon = await _confirmAbandon(context);
     if (!abandon || !mounted) return;
     Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
-    final GameController controller = GameScope.of(context);
+    final controller = GameScope.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -51,8 +49,8 @@ class _GameScreenState extends State<GameScreen> {
       ),
       body: ListenableBuilder(
         listenable: controller,
-        builder: (BuildContext context, Widget? _) {
-          final GameRound? round = controller.currentRound;
+        builder: (context, _) {
+          final round = controller.currentRound;
           if (round == null) {
             return const Center(child: Text('Nenhuma rodada em andamento.'));
           }
@@ -68,7 +66,7 @@ class _GameScreenState extends State<GameScreen> {
           return SingleChildScrollView(
             padding: const EdgeInsets.all(12),
             child: Column(
-              children: <Widget>[
+              children: [
                 _StatusBar(
                   round: round,
                   onHintRequested: () => _showHint(context, controller),
@@ -105,22 +103,22 @@ class _StatusBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final bool canHint = round.hasMoreHints && !round.isFinished;
+    final theme = Theme.of(context);
+    final canHint = round.hasMoreHints && !round.isFinished;
 
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
+          children: [
             Text(
               '${round.entry.category.label} • ${round.entry.difficulty.label}',
               style: theme.textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
             Row(
-              children: <Widget>[
+              children: [
                 Text('Erros: ${round.mistakes}/${round.maxMistakes}'),
                 const Spacer(),
                 TextButton.icon(
@@ -156,13 +154,13 @@ class _ResultView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final bool won = round.status == GameStatus.won;
+    final theme = Theme.of(context);
+    final won = round.status == GameStatus.won;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
-        children: <Widget>[
+        children: [
           Icon(
             won ? Icons.emoji_events : Icons.sentiment_dissatisfied,
             size: 64,
@@ -186,7 +184,7 @@ class _ResultView extends StatelessWidget {
           const SizedBox(height: 8),
           Text('Erros: ${round.mistakes}/${round.maxMistakes}'),
           Text('Dica: ${round.isHintUsed ? 'utilizada' : 'não utilizada'}'),
-          if (round.isHintUsed) ...<Widget>[
+          if (round.isHintUsed) ...[
             const SizedBox(height: 4),
             Text(round.hintText, style: theme.textTheme.bodyMedium),
           ],
@@ -195,7 +193,7 @@ class _ResultView extends StatelessWidget {
             alignment: WrapAlignment.center,
             spacing: 8,
             runSpacing: 8,
-            children: <Widget>[
+            children: [
               FilledButton(
                 onPressed: onNewRound,
                 child: const Text('Nova rodada'),
@@ -213,7 +211,7 @@ class _ResultView extends StatelessWidget {
 }
 
 Future<void> _showHint(BuildContext context, GameController controller) async {
-  final GameRound? round = controller.currentRound;
+  final round = controller.currentRound;
   if (round == null) return;
 
   if (!round.isHintUsed) {
@@ -222,12 +220,12 @@ Future<void> _showHint(BuildContext context, GameController controller) async {
 
   await showDialog<void>(
     context: context,
-    builder: (BuildContext context) => AlertDialog(
+    builder: (context) => AlertDialog(
       title: const Text('Dica'),
       content: Text(
         round.hintText.isEmpty ? 'Sem dica disponível.' : round.hintText,
       ),
-      actions: <Widget>[
+      actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Fechar'),
@@ -238,14 +236,14 @@ Future<void> _showHint(BuildContext context, GameController controller) async {
 }
 
 Future<bool> _confirmAbandon(BuildContext context) async {
-  final bool? abandon = await showDialog<bool>(
+  final abandon = await showDialog<bool>(
     context: context,
-    builder: (BuildContext context) => AlertDialog(
+    builder: (context) => AlertDialog(
       title: const Text('Abandonar rodada?'),
       content: const Text(
         'A rodada em andamento não será contabilizada nas estatísticas.',
       ),
-      actions: <Widget>[
+      actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
           child: const Text('Continuar'),
@@ -264,19 +262,19 @@ Future<bool> showExhaustedDialog(
   BuildContext context,
   GameController controller,
 ) async {
-  final AnswerCategory? category = controller.selectedCategory;
-  final Difficulty? difficulty = controller.selectedDifficulty;
+  final category = controller.selectedCategory;
+  final difficulty = controller.selectedDifficulty;
   if (category == null || difficulty == null) return false;
 
-  final bool? release = await showDialog<bool>(
+  final release = await showDialog<bool>(
     context: context,
-    builder: (BuildContext context) => AlertDialog(
+    builder: (context) => AlertDialog(
       title: const Text('Respostas esgotadas'),
       content: Text(
         'Todas as respostas de ${category.label}/${difficulty.label} '
         'já foram usadas nesta sessão.',
       ),
-      actions: <Widget>[
+      actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
           child: const Text('Cancelar'),
@@ -292,6 +290,6 @@ Future<bool> showExhaustedDialog(
   if (release != true) return false;
 
   controller.releaseUsedAnswers(category, difficulty);
-  final StartRoundResult result = controller.startAnotherRound();
+  final result = controller.startAnotherRound();
   return result == StartRoundResult.started;
 }

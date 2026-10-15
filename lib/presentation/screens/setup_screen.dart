@@ -1,25 +1,43 @@
 import 'package:flutter/material.dart';
 
 import '../../domain/game/game_rules.dart';
-import '../../domain/model/answer_category.dart';
-import '../../domain/model/difficulty.dart';
 import '../../game_scope.dart';
-import '../l10n/labels.dart';
+import '../labels/labels.dart';
 import '../state/game_controller.dart';
 import 'game_screen.dart';
+import 'statistics_screen.dart';
+import 'team_screen.dart';
 
 class SetupScreen extends StatelessWidget {
   const SetupScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final GameController controller = GameScope.of(context);
+    final controller = GameScope.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Jogo da Forca')),
+      appBar: AppBar(
+        title: const Text('Jogo da Forca'),
+        actions: [
+          IconButton(
+            tooltip: 'Estatísticas',
+            icon: const Icon(Icons.bar_chart),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const StatisticsScreen()),
+            ),
+          ),
+          IconButton(
+            tooltip: 'Equipe',
+            icon: const Icon(Icons.groups),
+            onPressed: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute<void>(builder: (_) => const TeamScreen())),
+          ),
+        ],
+      ),
       body: ListenableBuilder(
         listenable: controller,
-        builder: (BuildContext context, Widget? _) {
+        builder: (context, _) {
           switch (controller.catalogStatus) {
             case CatalogStatus.loading:
               return const Center(child: CircularProgressIndicator());
@@ -51,7 +69,7 @@ class _ErrorView extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
+          children: [
             const Icon(Icons.error_outline, size: 48),
             const SizedBox(height: 12),
             const Text('Não foi possível carregar os dados.'),
@@ -79,18 +97,18 @@ class _SelectionView extends StatelessWidget {
   final GameController controller;
 
   Future<void> _start(BuildContext context) async {
-    final AnswerCategory? category = controller.selectedCategory;
-    final Difficulty? difficulty = controller.selectedDifficulty;
+    final category = controller.selectedCategory;
+    final difficulty = controller.selectedDifficulty;
     if (category == null || difficulty == null) return;
 
-    final StartRoundResult result = controller.startRound(
+    final result = controller.startRound(
       category: category,
       difficulty: difficulty,
     );
     if (!context.mounted) return;
 
     if (result == StartRoundResult.exhausted) {
-      final bool started = await showExhaustedDialog(context, controller);
+      final started = await showExhaustedDialog(context, controller);
       if (!context.mounted || !started) return;
     }
 
@@ -100,29 +118,26 @@ class _SelectionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final AnswerCategory? selectedCategory = controller.selectedCategory;
-    final Difficulty? selectedDifficulty = controller.selectedDifficulty;
-
-    final List<Difficulty> difficulties = selectedCategory == null
-        ? const <Difficulty>[]
+    final theme = Theme.of(context);
+    final selectedCategory = controller.selectedCategory;
+    final selectedDifficulty = controller.selectedDifficulty;
+    final difficulties = selectedCategory == null
+        ? const []
         : controller.difficultiesFor(selectedCategory);
-
-    final bool canStart =
-        selectedCategory != null && selectedDifficulty != null;
+    final canStart = selectedCategory != null && selectedDifficulty != null;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
+        children: [
           Text('Categoria', style: theme.textTheme.titleMedium),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: <Widget>[
-              for (final AnswerCategory category in controller.categories)
+            children: [
+              for (final category in controller.categories)
                 ChoiceChip(
                   label: Text(category.label),
                   selected: category == selectedCategory,
@@ -136,8 +151,8 @@ class _SelectionView extends StatelessWidget {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: <Widget>[
-              for (final Difficulty difficulty in difficulties)
+            children: [
+              for (final difficulty in difficulties)
                 ChoiceChip(
                   label: Text(difficulty.label),
                   selected: difficulty == selectedDifficulty,
@@ -151,7 +166,7 @@ class _SelectionView extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
+                children: [
                   Text('Seleção atual', style: theme.textTheme.titleMedium),
                   const SizedBox(height: 8),
                   Text('Categoria: ${selectedCategory?.label ?? '—'}'),

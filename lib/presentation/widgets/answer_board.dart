@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../domain/model/answer.dart';
 import '../../domain/model/answer_cell.dart';
-import '../../domain/model/answer_word.dart';
 
-const double kMinCellSize = 22;
-const double kMaxCellSize = 44;
+const double _minCellSize = 22;
+const double _maxCellSize = 44;
 const double _cellGap = 4;
 
 class AnswerBoard extends StatelessWidget {
@@ -21,18 +20,18 @@ class AnswerBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        final double maxWidth = constraints.maxWidth.isFinite
+      builder: (context, constraints) {
+        final maxWidth = constraints.maxWidth.isFinite
             ? constraints.maxWidth
-            : kMaxCellSize * 12;
+            : _maxCellSize * 12;
 
         return Wrap(
           alignment: WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
           spacing: 24,
           runSpacing: 16,
-          children: <Widget>[
-            for (final AnswerWord word in answer.words)
+          children: [
+            for (final word in answer.words)
               _WordLayout(
                 cells: word.cells,
                 guessedKeys: guessedKeys,
@@ -58,18 +57,18 @@ class _WordLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int count = cells.length;
-    final double fitted = count == 0
-        ? kMaxCellSize
+    final count = cells.length;
+    final fitted = count == 0
+        ? _maxCellSize
         : (maxWidth - _cellGap * count) / count;
-    final double cellSize = fitted.clamp(kMinCellSize, kMaxCellSize).toDouble();
-    final double needed = count * cellSize + _cellGap * count;
+    final cellSize = fitted.clamp(_minCellSize, _maxCellSize).toDouble();
+    final needed = count * cellSize + _cellGap * count;
 
     if (needed <= maxWidth) {
       return Row(
         mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          for (final AnswerCell cell in cells)
+        children: [
+          for (final cell in cells)
             _LetterSlot(cell: cell, revealed: _revealed(cell), size: cellSize),
         ],
       );
@@ -78,8 +77,8 @@ class _WordLayout extends StatelessWidget {
     return Wrap(
       alignment: WrapAlignment.center,
       crossAxisAlignment: WrapCrossAlignment.center,
-      children: <Widget>[
-        for (final AnswerCell cell in cells)
+      children: [
+        for (final cell in cells)
           _LetterSlot(cell: cell, revealed: _revealed(cell), size: cellSize),
       ],
     );
@@ -102,9 +101,8 @@ class _LetterSlot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final bool isLetter = cell is LetterCell;
-    final bool showText = !isLetter || revealed;
+    final isLetter = cell is LetterCell;
+    final showText = !isLetter || revealed;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2),
@@ -116,7 +114,7 @@ class _LetterSlot extends StatelessWidget {
             ? BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
-                    color: theme.colorScheme.onSurfaceVariant,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     width: 2,
                   ),
                 ),

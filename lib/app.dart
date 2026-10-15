@@ -30,6 +30,7 @@ class _HangmanAppState extends State<HangmanApp> {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
           useMaterial3: true,
         ),
+        debugShowCheckedModeBanner: false,
         home: const SetupScreen(),
       ),
     );

@@ -19,8 +19,8 @@ class AlphabetKeyboard extends StatelessWidget {
       alignment: WrapAlignment.center,
       spacing: 4,
       runSpacing: 4,
-      children: <Widget>[
-        for (final String letter in kAlphabet.split(''))
+      children: [
+        for (final letter in kAlphabet.split(''))
           _Key(letter: letter, round: round, onLetter: onLetter),
       ],
     );
@@ -40,10 +40,10 @@ class _Key extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme scheme = Theme.of(context).colorScheme;
-    final bool finished = round.isFinished;
-    final bool used = round.isLetterUsed(letter);
-    final bool correct = used && round.entry.answer.containsKey(letter);
+    final scheme = Theme.of(context).colorScheme;
+    final finished = round.isFinished;
+    final used = round.isLetterUsed(letter);
+    final correct = used && round.entry.answer.containsKey(letter);
 
     final Color background;
     final Color foreground;
@@ -61,10 +61,8 @@ class _Key extends StatelessWidget {
       foreground = scheme.onErrorContainer;
     }
 
-    final BorderRadius radius = BorderRadius.circular(8);
-    final VoidCallback? onTap = (!finished && !used)
-        ? () => onLetter(letter)
-        : null;
+    final radius = BorderRadius.circular(8);
+    final onTap = (!finished && !used) ? () => onLetter(letter) : null;
 
     return SizedBox(
       width: 40,

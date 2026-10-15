@@ -30,17 +30,17 @@ class _HangmanPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final double stroke = size.width * 0.02;
-    final Paint paint = Paint()
+    final stroke = size.width * 0.02;
+    final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = stroke
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round;
 
-    final double w = size.width;
-    final double h = size.height;
-    final double baseY = h * 0.95;
+    final w = size.width;
+    final h = size.height;
+    final baseY = h * 0.95;
 
     canvas.drawLine(Offset(w * 0.10, baseY), Offset(w * 0.60, baseY), paint);
     canvas.drawLine(Offset(w * 0.20, baseY), Offset(w * 0.20, h * 0.05), paint);
