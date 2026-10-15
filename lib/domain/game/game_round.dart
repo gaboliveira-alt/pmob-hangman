@@ -29,7 +29,9 @@ class GameRound {
 
   bool isLetterRevealed(String letter) {
     final key = normalizeLetters(letter);
-    return key != null && _guessedKeys.contains(key) && entry.answer.containsKey(key);
+    return key != null &&
+        _guessedKeys.contains(key) &&
+        entry.answer.containsKey(key);
   }
 
   GuessResult guessLetter(String letter) {

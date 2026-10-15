@@ -11,7 +11,9 @@ class HangmanCatalog {
     final present = <AnswerCategory>{
       for (final entrie in entries) entrie.category,
     };
-    return AnswerCategory.values.where(present.contains).toList(growable: false);
+    return AnswerCategory.values
+        .where(present.contains)
+        .toList(growable: false);
   }
 
   List<Difficulty> difficultiesFor(AnswerCategory category) {
@@ -22,8 +24,13 @@ class HangmanCatalog {
     return Difficulty.values.where(present.contains).toList(growable: false);
   }
 
-  List<HangmanEntry> entriesFor(AnswerCategory category, Difficulty difficulty) =>
-      entries
-          .where((entrie) => entrie.category == category && entrie.difficulty == difficulty)
-          .toList(growable: false);
+  List<HangmanEntry> entriesFor(
+    AnswerCategory category,
+    Difficulty difficulty,
+  ) => entries
+      .where(
+        (entrie) =>
+            entrie.category == category && entrie.difficulty == difficulty,
+      )
+      .toList(growable: false);
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'game_scope.dart';
+import 'presentation/screens/setup_screen.dart';
 import 'presentation/state/game_controller.dart';
 
 class HangmanApp extends StatefulWidget {
@@ -29,11 +30,7 @@ class _HangmanAppState extends State<HangmanApp> {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
           useMaterial3: true,
         ),
-        home: const Scaffold(
-          body: Center(
-            child: Text('Jogo da Forca'),
-          ),
-        ),
+        home: const SetupScreen(),
       ),
     );
   }

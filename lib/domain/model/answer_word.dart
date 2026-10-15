@@ -7,6 +7,6 @@ class AnswerWord {
 
   Set<String> get letterKeys => <String>{
     for (final cell in cells)
-      if (cell is LetterCell) cell.keyLetter
+      if (cell is LetterCell) cell.keyLetter,
   };
 }

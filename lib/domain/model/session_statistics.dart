@@ -11,8 +11,7 @@ class SessionStatistics {
   int get totalMistakes => _totalMistakes;
   int get hintsUsed => _hintsUsed;
 
-  double get winPercentage =>
-      totalRounds == 0 ? 0 : _wins * 100 / totalRounds;
+  double get winPercentage => totalRounds == 0 ? 0 : _wins * 100 / totalRounds;
   double get lossPercentage =>
       totalRounds == 0 ? 0 : _losses * 100 / totalRounds;
 

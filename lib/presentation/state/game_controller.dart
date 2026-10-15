@@ -22,7 +22,7 @@ class GameController extends ChangeNotifier {
   final SessionStatistics _statistics = SessionStatistics();
 
   GameController([CatalogManager? catalogManager])
-      : _catalogManager = catalogManager ?? CatalogManager();
+    : _catalogManager = catalogManager ?? CatalogManager();
 
   CatalogStatus get catalogStatus => _catalogManager.status;
   String? get errorMessage => _catalogManager.errorMessage;
@@ -45,7 +45,8 @@ class GameController extends ChangeNotifier {
 
   void selectCategory(AnswerCategory category) {
     _selectedCategory = category;
-    if (_selectedDifficulty != null && !difficultiesFor(category).contains(_selectedDifficulty)) {
+    if (_selectedDifficulty != null &&
+        !difficultiesFor(category).contains(_selectedDifficulty)) {
       _selectedDifficulty = null;
     }
     notifyListeners();

@@ -13,7 +13,7 @@ class CatalogManager {
   HangmanCatalog? _catalog;
 
   CatalogManager([AssetHangmanRepository? repository])
-      : _repository = repository ?? const AssetHangmanRepository() {
+    : _repository = repository ?? const AssetHangmanRepository() {
     load();
   }
 

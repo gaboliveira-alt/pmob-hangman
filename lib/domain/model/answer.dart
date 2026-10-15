@@ -9,7 +9,6 @@ class Answer {
 
   const Answer(this.text, this.words, this.lettersKeys);
 
-
   factory Answer.parse(String text) {
     final List<AnswerWord> words = [];
     List<AnswerCell> currentCell = [];
@@ -49,7 +48,6 @@ class Answer {
       Set<String>.unmodifiable(keys),
     );
   }
-
 
   Iterable<LetterCell> get letters =>
       words.expand((word) => word.cells.whereType<LetterCell>());
